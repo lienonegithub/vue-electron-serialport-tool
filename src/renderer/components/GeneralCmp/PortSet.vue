@@ -17,7 +17,7 @@
           <el-select v-model="params.port"
                      :disabled="isDisabled"
                      placeholder="串口号">
-            <el-option v-for="(port,index) in portsettings.port"
+            <el-option v-if="" v-for="(port,index) in portsettings.port"
                        :key="index"
                        :label="port"
                        :value="port"></el-option>
@@ -47,7 +47,10 @@
   </div>
 </template>
 <script>
-import { mapGetters,mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import SerialPort from 'serialport'
+import Readline from '@serialport/parser-readline'
+
 export default {
   name: 'PortSet',
   data () {
@@ -71,8 +74,8 @@ export default {
   },
   sockets: {
     portset (data) {
-      console.log("ReceivePortSetting:",data)
-      this.$store.dispatch('SetPortSettings',data)
+      console.log("ReceivePortSetting:", data)
+      this.$store.dispatch('SetPortSettings', data)
     },
     openning (data) {
       console.log(data)
@@ -109,6 +112,15 @@ export default {
       });
 
     }
+  },
+  mounted () {
+    const path = '/dev/tty-usbserial1'
+    const PORT = new SerialPort(path, { baduRate: 12500 })
+    const parser = new Readline()
+    PORT.pipe(parser)
+
+    parser.on('data', line => console.log(`>${line}`))
+    PORT.write('ROBOT POWER ON\n')
   }
 }
 </script>

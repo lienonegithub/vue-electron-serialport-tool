@@ -5,7 +5,10 @@
    portsettings: Object
  }
  const getters = {
-   getPortSet: state => state.portsettings
+   getPortSet: state => state.portsettings||{
+    port: [],
+    baudRate: []
+  }
  }
  const mutations = {
    SOCKET_CONNECT(state) {

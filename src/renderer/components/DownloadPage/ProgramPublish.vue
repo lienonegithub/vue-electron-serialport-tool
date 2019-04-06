@@ -66,7 +66,7 @@ export default {
       this.isDisable = true
       this.$socket.emit('downloader', 'start')
     }
-  }
+  },
 }
 </script>
 <style scoped lang="scss">
